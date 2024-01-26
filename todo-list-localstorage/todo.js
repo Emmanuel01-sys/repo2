@@ -2,7 +2,7 @@ let list = document.getElementById("list");
 let activities;
 
 if(!localStorage.todo) localStorage.setItem("todo", "");
-activities = localStorage.todo.split(",");
+activities = localStorage.todo.split("/++/");//unique separator
 
 for(let i = 0; i < activities.length-1; i++) {
     let x = document.createElement("li");
@@ -15,8 +15,7 @@ for(let i = 0; i < activities.length-1; i++) {
 document.getElementsByClassName("add-item")[0].addEventListener("click",()=>{
     let activity = document.getElementsByName("activity")[0].value;
     if(activity.length) {
-        localStorage.todo += activity+",";
-        document.getElementsByName("activity")[0].innerText = "";
+        localStorage.todo += activity+"/++/";//unique separator
         location.reload();
     }
 });
@@ -26,7 +25,7 @@ let deleteButtons = document.getElementsByClassName("delete");
 for(let i = 0; i < deleteButtons.length; i++) {
     deleteButtons.item(i).addEventListener("click", ()=>{
         activities.splice(i,1);
-        localStorage.todo = activities.toString();
+        localStorage.todo = activities.join("/++/");
         location.reload();
     });
 }
@@ -36,15 +35,16 @@ let editButtons = document.getElementsByClassName("edit");
 for(let i = 0; i < editButtons.length; i++) {
     editButtons.item(i).addEventListener("click", ()=>{
         let element = editButtons.item(i).parentNode.children[0];
-        element.setAttribute("contenteditable", true);
-        element.focus();
         let oldText = element.innerText;
 
+        element.setAttribute("contenteditable", true);
+        element.focus();
+        
         element.addEventListener("focusout", ()=>{
-            element.setAttribute("contenteditable", false);
             let newText = element.innerText;
+            element.setAttribute("contenteditable", false);
             activities.splice(activities.indexOf(oldText), 1, newText);
-            localStorage.todo = activities.toString();
+            localStorage.todo = activities.join("/++/");
             location.reload();
         });
     });
